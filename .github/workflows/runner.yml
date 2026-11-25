@@ -1,0 +1,36 @@
+name: Real Gameplay Runner
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Trigger every 1 hour
+    - cron: '0 * * * *'
+
+jobs:
+  run-gameplay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout Private Automation Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'tamilts124/mini-militia-automation'
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          pip install "websockets<14" lz4 tabulate
+
+      - name: Execute Gameplay Automation (100 Games)
+        env:
+          FB_LOGIN_HEX: ${{ secrets.FB_LOGIN_HEX }}
+          GAME_COUNT: '100'
+          PYTHONUNBUFFERED: '1'
+        run: |
+          python -u real_gameplay.py --games 100
