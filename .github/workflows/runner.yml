@@ -30,7 +30,7 @@ jobs:
       - name: Execute Gameplay Automation (100 Games)
         env:
           FB_LOGIN_HEX: ${{ secrets.FB_LOGIN_HEX }}
-          GAME_COUNT: '100'
+          GAME_COUNT: '300'
           PYTHONUNBUFFERED: '1'
         run: |
-          python -u real_gameplay.py --games 100
+          python -u real_gameplay.py --games 300
