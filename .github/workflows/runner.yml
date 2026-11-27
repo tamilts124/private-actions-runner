@@ -27,10 +27,27 @@ jobs:
         run: |
           pip install "websockets<14" lz4 tabulate
 
-      - name: Execute Gameplay Automation (100 Games)
+      - name: Pre-Gameplay Claim (Free Coins & Crates)
+        continue-on-error: true
+        env:
+          FB_LOGIN_HEX: ${{ secrets.FB_LOGIN_HEX }}
+          PYTHONUNBUFFERED: '1'
+        run: |
+          python -u claim_fb_account.py
+
+      - name: Execute Gameplay Automation (300 Games)
         env:
           FB_LOGIN_HEX: ${{ secrets.FB_LOGIN_HEX }}
           GAME_COUNT: '300'
           PYTHONUNBUFFERED: '1'
         run: |
           python -u real_gameplay.py --games 300
+
+      - name: Post-Gameplay Claim (Free Coins & Crates)
+        if: always()
+        continue-on-error: true
+        env:
+          FB_LOGIN_HEX: ${{ secrets.FB_LOGIN_HEX }}
+          PYTHONUNBUFFERED: '1'
+        run: |
+          python -u claim_fb_account.py
